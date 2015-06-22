@@ -11,10 +11,10 @@ public class Response
 {
 
   private final Map<String, List<String>> headers;
+  private final List<BytesWithOffset> chunks;
 
   private String protocol;
   private String status;
-  private final List<BytesWithOffset> chunks;
 
   public Response()
   {

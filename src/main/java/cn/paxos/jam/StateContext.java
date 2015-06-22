@@ -44,8 +44,10 @@ public class StateContext
     }
     for (Iterator<State> iterator = stateRing.iterator(); iterator.hasNext();)
     {
+//      System.out.println(stateRing);
       State state = iterator.next();
       State nextState = state.onEvent(event, this);
+//      System.out.println(nextState);
 //      System.out.println("returned: " + state);
       if (nextState != null)
       {
