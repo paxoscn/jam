@@ -26,6 +26,16 @@ public class Request
     this.params = new HashMap<String, List<String>>();
     this.chunks = new LinkedList<BytesWithOffset>();
   }
+
+  public String getParam(String key)
+  {
+    List<String> list = this.getParams().get(key);
+    if (list == null || list.isEmpty())
+    {
+      return null;
+    }
+    return list.iterator().next();
+  }
   
   public String getCookie(String key)
   {

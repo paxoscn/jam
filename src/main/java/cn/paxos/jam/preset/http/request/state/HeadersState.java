@@ -63,8 +63,16 @@ public class HeadersState implements State
         if (contentLengthHeader != null && (!contentLengthHeader.isEmpty()))
         {
           int contentLength = Integer.parseInt(contentLengthHeader.iterator().next());
-          stateContext.publish(new OutputLengthChangedEvent(contentLength));
-          return new BodyState(request);
+          if (contentLength > 0)
+          {
+            stateContext.publish(new OutputLengthChangedEvent(contentLength));
+            return new BodyState(request);
+          } else
+          {
+            stateContext.publish(new RequestCompletedEvent(request));
+            // TODO
+            return null;
+          }
         } else
         {
           stateContext.publish(new RequestCompletedEvent(request));
