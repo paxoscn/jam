@@ -31,6 +31,18 @@ public class BytesWrapper
     return bytes.length - newAppended - offset;
   }
 
+  public int append(BytesWithOffset bytes, int offset)
+  {
+    if (this.isDone())
+    {
+      return bytes.getLength();
+    }
+    int newAppended = Math.min(bytes.getLength() - offset, length - appended);
+    arrays.add(new BytesWithOffset(bytes.getBytes(), bytes.getOffset() + offset, newAppended));
+    appended += newAppended;
+    return bytes.getLength() - newAppended - offset;
+  }
+
   public boolean isDone()
   {
     return appended == length;
@@ -51,12 +63,12 @@ public class BytesWrapper
     int count = 0;
     for (BytesWithOffset array : arrays)
     {
-      if (index < count + array.getBytes().length - array.getOffset())
+      if (index < count + array.getLength())
       {
         return array.getBytes()[index - count + array.getOffset()];
       } else
       {
-        count += array.getBytes().length - array.getOffset();
+        count += array.getLength();
       }
     }
     throw new ArrayIndexOutOfBoundsException(index);

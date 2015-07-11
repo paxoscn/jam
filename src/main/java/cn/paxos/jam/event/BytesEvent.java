@@ -1,18 +1,24 @@
 package cn.paxos.jam.event;
 
 import cn.paxos.jam.Event;
+import cn.paxos.jam.util.BytesWithOffset;
 
 public class BytesEvent implements Event
 {
   
-  private final byte[] bytes;
+  private final BytesWithOffset bytes;
 
   public BytesEvent(byte[] bytes)
   {
-    this.bytes = bytes;
+    this(bytes, 0, bytes.length);
   }
 
-  public byte[] getBytes()
+  public BytesEvent(byte[] bytes, int offset, int length)
+  {
+    this.bytes = new BytesWithOffset(bytes, offset, length);
+  }
+
+  public BytesWithOffset getBytes()
   {
     return bytes;
   }
