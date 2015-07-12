@@ -40,6 +40,10 @@ public class Request
   public String getCookie(String key)
   {
     List<String> cookieLines = headers.get("Cookie");
+    if (cookieLines == null)
+    {
+      return null;
+    }
     for (String cookieLine : cookieLines)
     {
       Map<String, String> cookies = new HashMap<String, String>();

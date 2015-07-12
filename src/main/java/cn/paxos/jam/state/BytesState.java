@@ -32,6 +32,14 @@ public class BytesState implements State
         int left = bytesWrapper.append(bytes, bytes.getOffset() + used);
         if (bytesWrapper.isDone())
         {
+//          try
+//          {
+//            System.out.println("------------"+bytesWrapper.buildString("UTF-8"));
+//          } catch (UnsupportedEncodingException e)
+//          {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//          }
           stateContext.publish(new BytesWrapperEvent(bytesWrapper));
           bytesWrapper = new BytesWrapper(outputLength);
         }
