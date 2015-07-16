@@ -51,21 +51,21 @@ public class HeadersState implements State
           int indexOfEqual = kv.indexOf(':');
           String k = kv.substring(0, indexOfEqual);
           String v = kv.substring(indexOfEqual + 1).trim();
-          List<String> value = response.getHeaders().get(k);
+          List<String> value = response.getHeaderList(k);
           if (value == null)
           {
             value = new LinkedList<String>();
-            response.getHeaders().put(k, value);
+            response.putHeaderList(k, value);
           }
           value.add(v);
         }
-        List<String> transferEncoding = response.getHeaders().get("Transfer-Encoding");
+        List<String> transferEncoding = response.getHeaderList("Transfer-Encoding");
         if (transferEncoding != null && (!transferEncoding.isEmpty()) && "chunked".equals(transferEncoding.iterator().next()))
         {
           return new ChunkHeaderState(response);
         } else
         {
-          int contentLength = Integer.parseInt(response.getHeaders().get("Content-Length").iterator().next());
+          int contentLength = Integer.parseInt(response.getHeaderList("Content-Length").iterator().next());
           if (contentLength > 0)
           {
             stateContext.publish(new OutputLengthChangedEvent(contentLength));

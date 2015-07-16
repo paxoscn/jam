@@ -21,6 +21,18 @@ public class Response
     this.headers = new HashMap<String, List<String>>();
     this.chunks = new LinkedList<BytesWithOffset>();
   }
+
+  public List<String> getHeaderList(String key)
+  {
+    key = key.toLowerCase();
+    return headers.get(key);
+  }
+
+  public void putHeaderList(String key, List<String> list)
+  {
+    key = key.toLowerCase();
+    headers.put(key, list);
+  }
   
   public Map<String, List<String>> getHeaders()
   {
