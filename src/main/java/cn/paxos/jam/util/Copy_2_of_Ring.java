@@ -1,16 +1,14 @@
 package cn.paxos.jam.util;
 
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
-public class Ring<E> implements Iterable<E>
+public class Copy_2_of_Ring<E> implements Iterable<E>
 {
   
   private final Node<E> head;
 
-  public Ring()
+  public Copy_2_of_Ring()
   {
     head = new Node<E>();
     head.prev = head;
@@ -43,7 +41,9 @@ public class Ring<E> implements Iterable<E>
     {
       if (current.value == e)
       {
-        current.value = newE;
+        Node<E> prev = current.prev;
+        delete(current);
+        add(newE, prev);
         return;
       }
       current = current.next;
@@ -56,12 +56,12 @@ public class Ring<E> implements Iterable<E>
     return new Iterator<E>()
     {
 
-      private Node<E> next;
-      private List<Node<E>> iterated;
+      private Node<E> pointer;
+      private Node<E> last;
       
       {
-        next = null;
-        iterated = new LinkedList<Node<E>>();
+        pointer = head;
+        last = null;
 //        System.out.println("-- " + Ring.this);
 //        System.out.println("-- " + (pointer == head));
       }
@@ -69,12 +69,15 @@ public class Ring<E> implements Iterable<E>
       @Override
       public boolean hasNext()
       {
-        Node<E> current = head.next;
+        if (pointer == null)
+        {
+          return false;
+        }
+        Node<E> current = pointer.next;
         while (current != head)
         {
-          if (!iterated.contains(current))
+          if (!current.pointing)
           {
-            next = current;
             return true;
           }
           current = current.next;
@@ -85,19 +88,47 @@ public class Ring<E> implements Iterable<E>
       @Override
       public E next()
       {
-        E returned = next.value;
-        iterated.add(next);
-        return returned;
+//        System.out.println("<< " + Ring.this);
+//        System.out.println("<< " + (pointer == head));
+        Node<E> current = pointer.next;
+        while (current != head)
+        {
+          if (!current.pointing)
+          {
+            E value = current.value;
+            if (pointer == head)
+            {
+//              System.out.println("<<< " + Ring.this);
+              pointer = add((E) null, current);
+              pointer.pointing = true;
+//              System.out.println(">>> " + Ring.this);
+            } else
+            {
+              move(pointer, current);
+            }
+            // TODO
+//            if (!hasNext())
+//            {
+//              delete(pointer);
+//              pointer = null;
+//            }
+            last = current;
+//            System.out.println(">> " + Ring.this);
+            return value;
+          }
+          current = current.next;
+        }
+        throw new NoSuchElementException();
       }
 
       @Override
       public void remove()
       {
-        if (next == null)
+        if (last == null)
         {
           throw new NoSuchElementException();
         }
-        delete(next);
+        delete(last);
       }
       
     };
@@ -147,9 +178,17 @@ public class Ring<E> implements Iterable<E>
 //    System.out.println("> " + this);
   }
   
+  private void move(Node<E> node, Node<E> prev)
+  {
+    E value = node.value;
+    delete(node);
+    node.value = value;
+    add(node, prev);
+  }
+  
   public static void main(String[] args)
   {
-    Ring<Integer> ring = new Ring<Integer>();
+    Copy_2_of_Ring<Integer> ring = new Copy_2_of_Ring<Integer>();
     System.out.println("===");
     for (Iterator<Integer> iterator = ring.iterator(); iterator.hasNext();)
     {
@@ -220,6 +259,7 @@ public class Ring<E> implements Iterable<E>
   private static class Node<E>
   {
 
+    private boolean pointing = false;
     private E value = null;
     private Node<E> prev = null;
     private Node<E> next = null;
@@ -228,7 +268,7 @@ public class Ring<E> implements Iterable<E>
     @Override
     public String toString()
     {
-      return id + "[" + prev.id + ", " + value + ", " + next.id + "]";
+      return id + "[" + prev.id + ", " + pointing + ", " + value + ", " + next.id + "]";
     }
     
   }

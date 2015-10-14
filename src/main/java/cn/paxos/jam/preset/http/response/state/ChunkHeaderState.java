@@ -1,7 +1,5 @@
 package cn.paxos.jam.preset.http.response.state;
 
-import java.io.ByteArrayOutputStream;
-
 import cn.paxos.jam.Event;
 import cn.paxos.jam.State;
 import cn.paxos.jam.StateContext;
@@ -10,12 +8,13 @@ import cn.paxos.jam.event.OutputLengthChangedEvent;
 import cn.paxos.jam.preset.http.response.Response;
 import cn.paxos.jam.preset.http.response.event.ResponseCompletedEvent;
 import cn.paxos.jam.util.BytesWrapper;
+import cn.paxos.jam.util.LightByteArrayOutputStream;
 
 public class ChunkHeaderState implements State
 {
 
   private final Response response;
-  private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+  private final LightByteArrayOutputStream baos = new LightByteArrayOutputStream();
 
   public ChunkHeaderState(Response response)
   {

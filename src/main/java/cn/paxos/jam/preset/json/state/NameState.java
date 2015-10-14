@@ -1,18 +1,21 @@
-package cn.paxos.jam.preset.http.request.state;
+package cn.paxos.jam.preset.json.state;
 
 import cn.paxos.jam.Event;
 import cn.paxos.jam.State;
 import cn.paxos.jam.StateContext;
 import cn.paxos.jam.event.BytesWrapperEvent;
-import cn.paxos.jam.preset.http.request.Request;
+import cn.paxos.jam.preset.json.Container;
 import cn.paxos.jam.util.BytesWrapper;
-import cn.paxos.jam.util.LightByteArrayOutputStream;
 
-public class MethodState implements State
+public class NameState implements State
 {
 
-  private final Request request = new Request();
-  private final LightByteArrayOutputStream baos = new LightByteArrayOutputStream();
+  private final Container container;
+
+  public NameState(Container container)
+  {
+    this.container = container;
+  }
 
   @Override
   public State onEvent(Event event, StateContext stateContext)
@@ -21,14 +24,18 @@ public class MethodState implements State
     {
       BytesWrapper bytesWrapper = ((BytesWrapperEvent) event).getBytesWrapper();
       byte b = bytesWrapper.get(0);
-      if (b == ' ')
+      if (b == ' ' || b == '\r' || b == '\n' || b == '\t')
       {
-        String method = new String(baos.toByteArray());
-        request.setMethod(method);
-        return new URIState(request);
+        return this;
       } else
       {
-        baos.write(b);
+        if (b == '"' || b == '\'')
+        {
+          return new StringState(container, b);
+        } else
+        {
+          return new NameEndState(container, b);
+        }
       }
     }
     return this;

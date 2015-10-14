@@ -1,19 +1,18 @@
 package cn.paxos.jam.preset.http.request.state;
 
-import java.io.ByteArrayOutputStream;
-
 import cn.paxos.jam.Event;
 import cn.paxos.jam.State;
 import cn.paxos.jam.StateContext;
 import cn.paxos.jam.event.BytesWrapperEvent;
 import cn.paxos.jam.preset.http.request.Request;
 import cn.paxos.jam.util.BytesWrapper;
+import cn.paxos.jam.util.LightByteArrayOutputStream;
 
 public class ProtocolState implements State
 {
 
   private final Request request;
-  private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+  private final LightByteArrayOutputStream baos = new LightByteArrayOutputStream();
 
   public ProtocolState(Request request)
   {

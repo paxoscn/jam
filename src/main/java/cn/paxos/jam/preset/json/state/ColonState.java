@@ -1,18 +1,21 @@
-package cn.paxos.jam.preset.http.request.state;
+package cn.paxos.jam.preset.json.state;
 
 import cn.paxos.jam.Event;
 import cn.paxos.jam.State;
 import cn.paxos.jam.StateContext;
 import cn.paxos.jam.event.BytesWrapperEvent;
-import cn.paxos.jam.preset.http.request.Request;
+import cn.paxos.jam.preset.json.Container;
 import cn.paxos.jam.util.BytesWrapper;
-import cn.paxos.jam.util.LightByteArrayOutputStream;
 
-public class MethodState implements State
+public class ColonState implements State
 {
 
-  private final Request request = new Request();
-  private final LightByteArrayOutputStream baos = new LightByteArrayOutputStream();
+  private final Container container;
+
+  public ColonState(Container container)
+  {
+    this.container = container;
+  }
 
   @Override
   public State onEvent(Event event, StateContext stateContext)
@@ -21,14 +24,12 @@ public class MethodState implements State
     {
       BytesWrapper bytesWrapper = ((BytesWrapperEvent) event).getBytesWrapper();
       byte b = bytesWrapper.get(0);
-      if (b == ' ')
+      if (b == ':')
       {
-        String method = new String(baos.toByteArray());
-        request.setMethod(method);
-        return new URIState(request);
+        return new ElementState(container);
       } else
       {
-        baos.write(b);
+        return this;
       }
     }
     return this;

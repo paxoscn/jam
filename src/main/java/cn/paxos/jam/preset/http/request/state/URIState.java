@@ -1,6 +1,5 @@
 package cn.paxos.jam.preset.http.request.state;
 
-import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -12,12 +11,13 @@ import cn.paxos.jam.event.BytesWrapperEvent;
 import cn.paxos.jam.preset.http.request.Request;
 import cn.paxos.jam.preset.http.request.event.URIEvent;
 import cn.paxos.jam.util.BytesWrapper;
+import cn.paxos.jam.util.LightByteArrayOutputStream;
 
 public class URIState implements State
 {
 
   private final Request request;
-  private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+  private final LightByteArrayOutputStream baos = new LightByteArrayOutputStream();
 
   public URIState(Request request)
   {

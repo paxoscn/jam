@@ -1,6 +1,5 @@
 package cn.paxos.jam.preset.http.request.state;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,12 +14,13 @@ import cn.paxos.jam.preset.http.request.Request;
 import cn.paxos.jam.preset.http.request.event.RequestCompletedEvent;
 import cn.paxos.jam.preset.http.util.Swifter;
 import cn.paxos.jam.util.BytesWrapper;
+import cn.paxos.jam.util.LightByteArrayOutputStream;
 
 public class HeadersState implements State
 {
 
   private final Request request;
-  private final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+  private final LightByteArrayOutputStream baos = new LightByteArrayOutputStream();
   private final Swifter neckSwifter = new Swifter(4);
 
   public HeadersState(Request request)
