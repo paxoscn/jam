@@ -90,6 +90,12 @@ public class Container
           } else if (c == '\n')
           {
             escaped = "\\n";
+          } else if (c == '\t')
+          {
+            escaped = "\\t";
+          } else if (c == '\\')
+          {
+            escaped = "\\\\";
           } else if (c == '"')
           {
             escaped = "\\\"";
