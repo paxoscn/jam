@@ -1,26 +1,37 @@
 package cn.paxos.jam.util;
 
+import java.io.OutputStream;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class LightByteArrayOutputStream
+public class LightByteArrayOutputStream extends OutputStream
 {
   
   private final List<Object> list = new LinkedList<Object>();
   
   private int length = 0;
-  
-  public void write(byte b)
+
+  @Override
+  public void write(int b)
   {
-    list.add(b);
+    list.add((byte) b);
     length += 1;
   }
 
-  public void write(byte[] bs)
+  @Override
+  public void write(byte[] b)
   {
-    list.add(bs);
-    length += bs.length;
+    list.add(b);
+    length += b.length;
+  }
+
+  @Override
+  public void write(byte[] b, int off, int len)
+  {
+    byte[] bb = new byte[len];
+    System.arraycopy(b, off, bb, 0, len);
+    write(bb);
   }
 
   public byte[] toByteArray()
