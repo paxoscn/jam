@@ -42,6 +42,9 @@ public class ElementState implements State
           Container child = new Container(container, true);
           container.add(child);
           return new ElementState(child);
+        } else if (b == ']')
+        {
+          return new CommaState(container.getParent());
         } else
         {
           if (container.isArray())
